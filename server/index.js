@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import express from 'express';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
@@ -34,32 +35,23 @@ app.use(routes);
 //   swaggerUi.setup(swaggerDocument, options)
 // );
 
-app.use('/', (req, res, next) => {
-  res.status(200).json({ msg: 'welcome to panel financial' });
-});
 // / catch 404 and forward to error handler
 app.use((req, res, next) => {
-  /* istanbul ignore next */
   const err = new Error('Not Found');
-  /* istanbul ignore next */
   err.status = 404;
-  /* istanbul ignore next */
   next(err);
 });
 
 // error handler
 // will print stacktrace if not production
 app.use((err, req, res, next) => {
-  /* istanbul ignore next */
   res.status(err.status || 500);
-  /* istanbul ignore next */
   res.json({
     status: err.statusMessage || 'failure',
     errors: {
       message: err.message,
     }
   });
-  /* istanbul ignore next */
   if (isDevelopment) {
     next(err);
   }

@@ -8,7 +8,7 @@
   "scripts": {
     "start": "babel-node server",
     "start:dev": "nodemon --exec babel-node server",
-    "test": "cross-env NODE_ENV=test yarn run db:rollback && cross-env NODE_ENV=test nyc mocha tests/**/**.test.js --require babel-register --exit",
+    "test": "cross-env NODE_ENV=test yarn run db:rollback && cross-env NODE_ENV=test nyc mocha tests/**/** --require babel-register --exit",
     "cover": "./node_modules/.bin/babel-node node_modules/.bin/istanbul cover node_modules/.bin/_mocha -- ./tests/**/**.test.js --exit",
     "coveralls": "yarn run cover -- --report lcovonly && cat ./coverage/lcov.info | coveralls",
     "build": "babel . --ignore node_modules,coverage,dist -d dist/ && cp swagger.json dist/",
@@ -39,6 +39,7 @@
     "babel-preset-env": "^1.7.0",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
+    "coveralls": "^3.0.3",
     "cross-env": "^5.2.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb": "^17.1.0",
