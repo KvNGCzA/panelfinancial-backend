@@ -50,7 +50,9 @@ app.use((req, res, next) => {
 // error handler
 // will print stacktrace if not production
 app.use((err, req, res, next) => {
+  /* istanbul ignore next */
   res.status(err.status || 500);
+  /* istanbul ignore next */
   res.json({
     status: err.statusMessage || 'failure',
     errors: {

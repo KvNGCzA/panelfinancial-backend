@@ -2,10 +2,11 @@ import express from 'express';
 
 const user = express.Router();
 
+const base = '/users';
 
 // sign user
 user.post(
-  '/users/signup'
+  `${base}/signup`
 );
 
 export default user;
