@@ -1,12 +1,10 @@
 import express from 'express';
+// import UserControllers from '../../controllers/UserControllers';
 
 const user = express.Router();
 
-const base = '/users';
+// const { loginUser } = UserControllers;
+// const base = '/users';
 
-// sign user
-user.post(
-  `${base}/signup`
-);
 
 export default user;

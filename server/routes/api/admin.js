@@ -1,11 +1,12 @@
 import express from 'express';
+// import AdminControllers from '../../controllers/AdminControllers';
+
+// const { createUser } = AdminControllers;
 
 const admin = express.Router();
 
-const base = '/admin';
+// const base = '/admin';
 
-admin.get(`${base}`, (req, res, next) => {
-  res.json({ msg: 'working' });
-});
+// admin.get(`${base}/createuser`, createUser);
 
 export default admin;

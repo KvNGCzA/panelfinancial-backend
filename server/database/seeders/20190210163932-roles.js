@@ -19,20 +19,6 @@ export default {
     description: 'Can do every thing',
     createdAt: new Date(),
     updatedAt: new Date(),
-  },
-  {
-    id: 34521,
-    name: 'Client',
-    description: 'The Insurance Companies',
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: 98536,
-    name: 'Customers',
-    description: 'The garage companies',
-    createdAt: new Date(),
-    updatedAt: new Date(),
   }], {}),
 
   down: queryInterface => queryInterface.bulkDelete('Roles', null, {})
