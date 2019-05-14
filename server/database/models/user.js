@@ -23,33 +23,18 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.STRING,
     },
-    avatarUrl: {
-      allowNull: false,
-      type: DataTypes.STRING,
-      defaultValue: 'false'
-    },
-    verified: {
+    active: {
       allowNull: false,
       type: DataTypes.BOOLEAN,
-      defaultValue: false
-    },
-    follows: {
-      allowNull: false,
-      type: DataTypes.INTEGER,
-      defaultValue: 0
+      defaultValue: true
     },
   }, {});
   User.associate = (models) => {
-    const { UserRole, Follow } = models;
+    const { UserRole } = models;
 
     User.hasMany(UserRole, {
       foreignKey: 'userId',
       as: 'role'
-    });
-
-    User.hasMany(Follow, {
-      foreignKey: 'userId',
-      as: 'following'
     });
 
   };

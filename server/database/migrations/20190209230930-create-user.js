@@ -23,20 +23,10 @@ export default {
       allowNull: false,
       type: Sequelize.STRING,
     },
-    avatarUrl: {
-      allowNull: false,
-      type: Sequelize.STRING,
-      defaultValue: 'false'
-    },
-    verified: {
+    active: {
       allowNull: false,
       type: Sequelize.BOOLEAN,
-      defaultValue: false
-    },
-    follows: {
-      allowNull: false,
-      type: Sequelize.INTEGER,
-      defaultValue: 0
+      defaultValue: true
     },
     createdAt: {
       allowNull: false,
