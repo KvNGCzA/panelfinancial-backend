@@ -1,0 +1,18 @@
+language: node_js
+node_js:
+  - "stable"
+services:
+  - postgresql
+addons:
+    code_climate:
+        repo_token: c6fc68bf260fac51837dfcd12d179f07df2b294b264dcb241e3221d81aec988a
+cache:
+  directories:
+    - "node_modules"
+before_script:
+  - psql -c 'create database valinor_backend_test;' -U postgres
+  - yarn run db:rollback
+after_script:
+  - yarn run db:back
+script:
+  - yarn run coveralls

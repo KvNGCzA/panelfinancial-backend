@@ -4,5 +4,49 @@
   "main": "index.js",
   "repository": "git@github.com:KvNGCzA/panelfinancial-backend.git",
   "author": "KvNGCzA <akanmuoluwadamilare@yahoo.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "start": "babel-node server",
+    "start:dev": "nodemon --exec babel-node server",
+    "test": "cross-env NODE_ENV=test yarn run db:rollback && cross-env NODE_ENV=test nyc mocha tests/**/**.test.js --require babel-register --exit",
+    "cover": "./node_modules/.bin/babel-node node_modules/.bin/istanbul cover node_modules/.bin/_mocha -- ./tests/**/**.test.js --exit",
+    "coveralls": "yarn run cover -- --report lcovonly && cat ./coverage/lcov.info | coveralls",
+    "build": "babel . --ignore node_modules,coverage,dist -d dist/ && cp swagger.json dist/",
+    "db:rollback": "yarn run db:back && yarn run db:roll && yarn run db:seed",
+    "db:roll": "sequelize db:migrate",
+    "db:back": "sequelize db:migrate:undo:all",
+    "db:seed": "sequelize db:seed:all"
+  },
+  "dependencies": {
+    "babel-register": "^6.26.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.0.0",
+    "express": "^4.16.4",
+    "express-validator": "^5.3.1",
+    "pg": "^7.11.0",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^5.8.6",
+    "sequelize-cli": "^5.4.0",
+    "swagger-ui-express": "^4.0.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "cross-env": "^5.2.0",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.17.2",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-react": "^7.13.0",
+    "expect": "^24.8.0",
+    "mocha": "^6.1.4",
+    "mocha-lcov-reporter": "^1.3.0",
+    "morgan": "^1.9.1",
+    "nodemon": "^1.19.0",
+    "nyc": "^14.1.1"
+  }
 }
