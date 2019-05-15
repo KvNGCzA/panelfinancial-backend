@@ -12,7 +12,7 @@ const { request } = chai;
 
 const loginUrl = '/api/v1/auth/login';
 
-describe('TEST LGOIN ROUTE', () => {
+describe('TEST LOGIN ROUTE', () => {
   it('should login successfully', (done) => {
     request(app)
       .post(loginUrl)

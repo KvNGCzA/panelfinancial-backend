@@ -1,4 +1,6 @@
 /* eslint-disable */
+import bcrypt from 'bcrypt';
+
 export default {
   up: (queryInterface, Sequelize) => queryInterface.createTable('Users', {
     id: {
@@ -22,6 +24,7 @@ export default {
     password: {
       allowNull: false,
       type: Sequelize.STRING,
+      defaultValue: `${bcrypt.hashSync(process.env.DEFAULT_PASS, 10)}`
     },
     active: {
       allowNull: false,
