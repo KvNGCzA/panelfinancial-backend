@@ -1,4 +1,6 @@
 /* eslint-disable */
+import bcrypt from 'bcrypt';
+
 export default (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     id: {
@@ -22,6 +24,7 @@ export default (sequelize, DataTypes) => {
     password: {
       allowNull: false,
       type: DataTypes.STRING,
+      defaultValue: `${bcrypt.hashSync(process.env.DEFAULT_PASS, 10)}`
     },
     active: {
       allowNull: false,
