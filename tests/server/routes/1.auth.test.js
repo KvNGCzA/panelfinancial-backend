@@ -22,6 +22,7 @@ describe('TEST LOGIN ROUTE', () => {
       })
       .end((err, res) => {
         const { body: { status }, status: statusCode } = res;
+        expect(err).toBe(null);
         expect(statusCode).toBe(200);
         expect(status).toBe('success');
         done();
@@ -37,6 +38,7 @@ describe('TEST LOGIN ROUTE', () => {
       })
       .end((err, res) => {
         const { body: { status, message }, status: statusCode } = res;
+        expect(err).toBe(null);
         expect(statusCode).toBe(404);
         expect(status).toBe('failure');
         expect(message).toBe('email/password do not match');
@@ -53,6 +55,7 @@ describe('TEST LOGIN ROUTE', () => {
       })
       .end((err, res) => {
         const { body: { status, message }, status: statusCode } = res;
+        expect(err).toBe(null);
         expect(statusCode).toBe(400);
         expect(status).toBe('failure');
         expect(message).toBe('email/password do not match');
@@ -69,6 +72,7 @@ describe('TEST LOGIN ROUTE', () => {
       })
       .end((err, res) => {
         const { body: { status, errors }, status: statusCode } = res;
+        expect(err).toBe(null);
         expect(statusCode).toBe(422);
         expect(status).toBe('failure');
         expect(errors.email[0]).toBe('please enter an email');
@@ -85,6 +89,7 @@ describe('TEST LOGIN ROUTE', () => {
       })
       .end((err, res) => {
         const { body: { status, errors }, status: statusCode } = res;
+        expect(err).toBe(null);
         expect(statusCode).toBe(422);
         expect(status).toBe('failure');
         expect(errors.email[0]).toBe('please enter a valid email');
@@ -101,6 +106,7 @@ describe('TEST LOGIN ROUTE', () => {
       })
       .end((err, res) => {
         const { body: { status, errors }, status: statusCode } = res;
+        expect(err).toBe(null);
         expect(statusCode).toBe(422);
         expect(status).toBe('failure');
         expect(errors.password[0]).toBe('please enter a password');

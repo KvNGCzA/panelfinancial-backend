@@ -1,8 +1,6 @@
 import helpers from '../helpers';
-import models from '../database/models';
 
 const { formattedError } = helpers;
-const { Role } = models;
 /**
  * @class UserValidation
  * @description Helps perform validations on user request body.

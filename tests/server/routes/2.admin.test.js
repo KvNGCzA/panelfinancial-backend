@@ -3,9 +3,7 @@ import chaiHttp from 'chai-http';
 import expect from 'expect';
 import dotenv from 'dotenv';
 import app from '../../../server';
-import helpers from '../../../server/helpers';
-
-const { createToken } = helpers;
+import { superAdminToken, adminToken, employeeToken } from '../__mocks__/tokens';
 
 dotenv.config();
 
@@ -14,12 +12,175 @@ chai.use(chaiHttp);
 const { request } = chai;
 
 const createUserUrl = '/api/v1/admin/createuser';
+const updatePassUrl = '/api/v1/users/updatepass';
 
-const superAdminToken = createToken('122b0f86-8e78-5cc8-a28f-8e9f7811c457');
-const adminToken = createToken('133b0f86-8e78-3bb4-a28f-8e9f7811c457');
-const employeeToken = createToken('144b0f86-8e78-3bb4-a28f-8e9f7811c489');
+describe('TEST IF USER HAS UPDATED PASSWORD FROM DEFAULT', async () => {
+  it('should fail if password is not updated from default (superAdmin)', (done) => {
+    request(app)
+      .post(createUserUrl)
+      .set('Authorization', superAdminToken)
+      .send({
+        email: 'fail@jsnd.com',
+        firstName: 'fail',
+        lastName: 'fail',
+        roleId: 9786
+      })
+      .end((err, res) => {
+        const { body: { status, message }, status: statusCode } = res;
+        expect(err).toBe(null);
+        expect(statusCode).toBe(401);
+        expect(status).toBe('failure');
+        expect(message).toBe('please update your password');
+        done();
+      });
+  });
 
-describe('TEST CREATE USER ROUTE FOR ADMIN', () => {
+  it('should fail if password is not updated from default (admin)', (done) => {
+    request(app)
+      .post(createUserUrl)
+      .set('Authorization', adminToken)
+      .send({
+        email: 'fail@jsnd.com',
+        firstName: 'fail',
+        lastName: 'fail',
+        roleId: 9786
+      })
+      .end((err, res) => {
+        const { body: { status, message }, status: statusCode } = res;
+        expect(err).toBe(null);
+        expect(statusCode).toBe(401);
+        expect(status).toBe('failure');
+        expect(message).toBe('please update your password');
+        done();
+      });
+  });
+
+  it('should fail if password is not updated from default (employee)', (done) => {
+    request(app)
+      .post(createUserUrl)
+      .set('Authorization', employeeToken)
+      .send({
+        email: 'fail@jsnd.com',
+        firstName: 'fail',
+        lastName: 'fail',
+        roleId: 9786
+      })
+      .end((err, res) => {
+        expect(err).toBe(null);
+        const { body: { status, message }, status: statusCode } = res;
+        expect(statusCode).toBe(401);
+        expect(status).toBe('failure');
+        expect(message).toBe('please update your password');
+        done();
+      });
+  });
+});
+
+describe('TEST UPDATE PASSWORD ROUTE', () => {
+  it('should update password for super admin', (done) => {
+    request(app)
+      .put(updatePassUrl)
+      .set('Authorization', superAdminToken)
+      .send({
+        password: 'newpassword'
+      })
+      .end((err, res) => {
+        const { body: { status, message }, status: statusCode } = res;
+        expect(err).toBe(null);
+        expect(statusCode).toBe(201);
+        expect(status).toBe('success');
+        expect(message).toBe('password updated successfully');
+        done();
+      });
+  });
+
+  it('should fail to update same password for super admin', (done) => {
+    request(app)
+      .put(updatePassUrl)
+      .set('Authorization', superAdminToken)
+      .send({
+        password: 'newpassword'
+      })
+      .end((err, res) => {
+        const { body: { status, message }, status: statusCode } = res;
+        expect(err).toBe(null);
+        expect(statusCode).toBe(400);
+        expect(status).toBe('failure');
+        expect(message).toBe('you have used this password before');
+        done();
+      });
+  });
+
+  it('should update password for admin', (done) => {
+    request(app)
+      .put(updatePassUrl)
+      .set('Authorization', adminToken)
+      .send({
+        password: 'newpassword'
+      })
+      .end((err, res) => {
+        const { body: { status, message }, status: statusCode } = res;
+        expect(err).toBe(null);
+        expect(statusCode).toBe(201);
+        expect(status).toBe('success');
+        expect(message).toBe('password updated successfully');
+        done();
+      });
+  });
+
+  it('should fail to update same password for admin', (done) => {
+    request(app)
+      .put(updatePassUrl)
+      .set('Authorization', adminToken)
+      .send({
+        password: 'newpassword'
+      })
+      .end((err, res) => {
+        const { body: { status, message }, status: statusCode } = res;
+        expect(err).toBe(null);
+        expect(statusCode).toBe(400);
+        expect(status).toBe('failure');
+        expect(message).toBe('you have used this password before');
+        done();
+      });
+  });
+
+  it('should update password for employee', (done) => {
+    request(app)
+      .put(updatePassUrl)
+      .set('Authorization', employeeToken)
+      .send({
+        password: 'newpassword'
+      })
+      .end((err, res) => {
+        const { body: { status, message }, status: statusCode } = res;
+        expect(err).toBe(null);
+        expect(statusCode).toBe(201);
+        expect(status).toBe('success');
+        expect(message).toBe('password updated successfully');
+        done();
+      });
+  });
+
+  it('should fail to update same password for employee', (done) => {
+    request(app)
+      .put(updatePassUrl)
+      .set('Authorization', employeeToken)
+      .send({
+        password: 'newpassword'
+      })
+      .end((err, res) => {
+        const { body: { status, message }, status: statusCode } = res;
+        expect(err).toBe(null);
+        expect(statusCode).toBe(400);
+        expect(status).toBe('failure');
+        expect(message).toBe('you have used this password before');
+        done();
+      });
+  });
+});
+
+describe('TEST CREATE USER ROUTE', () => {
   it('should fail to create user if accessed by an employee', (done) => {
     request(app)
       .post(createUserUrl)
@@ -32,6 +193,7 @@ describe('TEST CREATE USER ROUTE FOR ADMIN', () => {
       })
       .end((err, res) => {
         const { body: { status, message }, status: statusCode } = res;
+        expect(err).toBe(null);
         expect(statusCode).toBe(403);
         expect(status).toBe('failure');
         expect(message).toBe('you are not authorized to perform this action');
@@ -51,6 +213,7 @@ describe('TEST CREATE USER ROUTE FOR ADMIN', () => {
       })
       .end((err, res) => {
         const { body: { status, message }, status: statusCode } = res;
+        expect(err).toBe(null);
         expect(statusCode).toBe(403);
         expect(status).toBe('failure');
         expect(message).toBe('you are not authorized to create a superadmin');
@@ -70,6 +233,7 @@ describe('TEST CREATE USER ROUTE FOR ADMIN', () => {
       })
       .end((err, res) => {
         const { body: { status, message }, status: statusCode } = res;
+        expect(err).toBe(null);
         expect(statusCode).toBe(200);
         expect(status).toBe('success');
         expect(message).toBe('user created successfully');
@@ -89,6 +253,7 @@ describe('TEST CREATE USER ROUTE FOR ADMIN', () => {
       })
       .end((err, res) => {
         const { body: { status, message }, status: statusCode } = res;
+        expect(err).toBe(null);
         expect(statusCode).toBe(200);
         expect(status).toBe('success');
         expect(message).toBe('user created successfully');
@@ -108,6 +273,7 @@ describe('TEST CREATE USER ROUTE FOR ADMIN', () => {
       })
       .end((err, res) => {
         const { body: { status, message }, status: statusCode } = res;
+        expect(err).toBe(null);
         expect(statusCode).toBe(200);
         expect(status).toBe('success');
         expect(message).toBe('user created successfully');
@@ -127,6 +293,7 @@ describe('TEST CREATE USER ROUTE FOR ADMIN', () => {
       })
       .end((err, res) => {
         const { body: { status, message }, status: statusCode } = res;
+        expect(err).toBe(null);
         expect(statusCode).toBe(200);
         expect(status).toBe('success');
         expect(message).toBe('user created successfully');
@@ -146,6 +313,7 @@ describe('TEST CREATE USER ROUTE FOR ADMIN', () => {
       })
       .end((err, res) => {
         const { body: { status, message }, status: statusCode } = res;
+        expect(err).toBe(null);
         expect(statusCode).toBe(200);
         expect(status).toBe('success');
         expect(message).toBe('user created successfully');
@@ -165,6 +333,7 @@ describe('TEST CREATE USER ROUTE FOR ADMIN', () => {
       })
       .end((err, res) => {
         const { body: { status, errors }, status: statusCode } = res;
+        expect(err).toBe(null);
         expect(statusCode).toBe(422);
         expect(status).toBe('failure');
         expect(errors.firstName[0]).toBe('please enter a first name');
@@ -184,6 +353,7 @@ describe('TEST CREATE USER ROUTE FOR ADMIN', () => {
       })
       .end((err, res) => {
         const { body: { status, errors }, status: statusCode } = res;
+        expect(err).toBe(null);
         expect(statusCode).toBe(422);
         expect(status).toBe('failure');
         expect(errors.firstName[0]).toBe('please enter a valid first name');
@@ -203,6 +373,7 @@ describe('TEST CREATE USER ROUTE FOR ADMIN', () => {
       })
       .end((err, res) => {
         const { body: { status, errors }, status: statusCode } = res;
+        expect(err).toBe(null);
         expect(statusCode).toBe(422);
         expect(status).toBe('failure');
         expect(errors.lastName[0]).toBe('please enter a last name');
@@ -222,6 +393,7 @@ describe('TEST CREATE USER ROUTE FOR ADMIN', () => {
       })
       .end((err, res) => {
         const { body: { status, errors }, status: statusCode } = res;
+        expect(err).toBe(null);
         expect(statusCode).toBe(422);
         expect(status).toBe('failure');
         expect(errors.lastName[0]).toBe('please enter a valid last name');
