@@ -1,16 +1,14 @@
 import jwt from 'jsonwebtoken';
 import helpers from '../helpers';
+import passUpdated from './passUpdated';
 
-const { findUserById } = helpers;
+const { findUserById, responseMessage } = helpers;
 
 export default class TokenUtils {
   static async verifyToken(req, res, next) {
     const token = req.headers.authorization || req.query.token;
     if (!token) {
-      return res.status(401).json({
-        status: 'failure',
-        message: 'please provide a token'
-      });
+      return responseMessage({ status: 'failure', message: 'please provide a token' }, 401, res);
     }
     const decoded = jwt.verify(
       token,
@@ -25,22 +23,14 @@ export default class TokenUtils {
       const findAccount = await findUserById(id, next);
       if (findAccount) {
         req.userData = findAccount;
-        return next();
+        // check if user has changed default password
+        return passUpdated(req, res, next);
       }
-      return res.status(404).json({
-        status: 'failure',
-        message: 'account not found'
-      });
+      return responseMessage({ status: 'failure', message: 'account not found' }, 404, res);
     }
     if (decoded.message === 'jwt expired') {
-      return res.status(401).json({
-        status: 'unauthorized',
-        message: 'token expired'
-      });
+      return responseMessage({ status: 'unauthorized', message: 'token expired' }, 401, res);
     }
-    return res.status(401).json({
-      status: 'unauthorized',
-      message: 'invalid token'
-    });
+    return responseMessage({ status: 'unauthorized', message: 'invalid token' }, 401, res);
   }
 }

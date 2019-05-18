@@ -26,6 +26,11 @@ export default {
       type: Sequelize.STRING,
       defaultValue: `${bcrypt.hashSync(process.env.DEFAULT_PASS, 10)}`
     },
+    passUpdated: {
+      allowNull: false,
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
+    },
     active: {
       allowNull: false,
       type: Sequelize.BOOLEAN,
